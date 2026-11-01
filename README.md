@@ -1,3 +1,6 @@
+<img width="1860" height="1521" alt="Lima 2026-11-01 at 00 10 34" src="https://github.com/user-attachments/assets/0dfcf3d5-846f-4588-97da-af021f2ffb7d" />
+
+
 # Homepage theme — "Home Assistant style"
 
 A dark theme for [Homepage](https://gethomepage.dev) (gethomepage/homepage): charcoal background, rounded cards, round glowing icons, pastel "pill" bars and the Inter font.
