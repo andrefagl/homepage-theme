@@ -1,0 +1,4 @@
+theme: dark
+color: neutral
+headerStyle: clean
+hideHostname: true

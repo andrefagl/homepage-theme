@@ -1,0 +1,318 @@
+/* =====================================================================
+   "Home Assistant style" theme for Homepage v2.6
+   Charcoal background, rounded dark cards, glowing round icon badges,
+   big light numbers, pastel pill bars.
+   ===================================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+/* ---- Palette ------------------------------------------------------- */
+:root {
+  --bg: #1c1c1e;
+  --card: #2c2c2e;
+  --card-hover: #333336;
+  --inner: rgba(255, 255, 255, 0.05);
+  --text: #f2f2f7;
+  --muted: #a1a1a8;
+  --radius: 28px;
+  /* glow colours (r,g,b) */
+  --c-blue: 90, 169, 255;
+  --c-amber: 245, 184, 90;
+  --c-green: 127, 216, 160;
+  --c-purple: 169, 139, 255;
+  --c-pink: 255, 143, 200;
+  --c-orange: 255, 159, 90;
+}
+
+/* ---- Base: flat charcoal background, Inter font --------------------- */
+html, body, #__next, #page_wrapper, #inner_wrapper {
+  background: var(--bg) !important;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  color: var(--text);
+}
+#background { display: none !important; } /* no wallpaper/blur layer */
+
+/* ---- Top bar (2026-10-24 redesign): one compact, vertically centred row ----
+   left : system-widget label + CPU/RAM bars + Backup pill (#lh-backup, custom.js)
+   right: search pill (#lh-search, moved here by custom.js) + date, far right
+   mobile (<640px): search drops to its own full-width line. */
+#information-widgets { margin: 12px 20px 0 !important; padding: 0 !important; border: 0 !important; }
+@media (min-width: 640px) { #information-widgets { margin: 12px 36px 0 !important; } }
+#widgets-wrap { align-items: center; flex-wrap: nowrap; gap: 16px; min-height: 32px; }
+#widgets-wrap > .widget-container:first-child { flex-direction: row; align-items: center; gap: 12px; align-self: center; }
+#widgets-wrap > .widget-container:first-child > div:first-child { align-items: center; flex-wrap: nowrap; gap: 12px; }
+#widgets-wrap > .widget-container:first-child > div:last-child { /* the system-widget label, now inline on the left */
+  order: -1; margin: 0; padding: 0; font-size: .75rem; line-height: 1; color: var(--muted); }
+.information-widget-resource { margin: 0 !important; padding: 0 !important; }
+.information-widget-resource .resource-value, .information-widget-resource .pr-1 { font-size: .72rem; color: var(--muted); }
+#information-widgets-right { flex: 0 0 auto; margin: 0 !important; display: flex; align-items: center; justify-content: flex-end; flex-wrap: nowrap; gap: 12px; }
+#information-widgets-right > .widget-container { margin: 0; }
+#information-widgets .information-widget-datetime .tabular-nums {
+  font-size: .78rem !important; font-weight: 400 !important; line-height: 1; color: var(--muted) !important; white-space: nowrap; }
+/* Backup pill */
+.lh-backup { display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px;
+  background: rgba(255,255,255,.05); color: var(--muted); font-size: .72rem; line-height: 1; white-space: nowrap; }
+.lh-backup-dot { width: 6px; height: 6px; border-radius: 50%; background: #a8e6b8; flex: none; }
+.lh-backup.warn { color: #ffb4a8; background: rgba(255,90,70,.12); }
+.lh-backup.warn .lh-backup-dot { background: #ff6b5b; }
+/* Search pill */
+#lh-search { display: flex; align-items: center; gap: 6px; box-sizing: border-box; height: 30px; width: 190px; max-width: 100%;
+  margin: 0; padding: 0 12px; border: 0; border-radius: 999px; overflow: hidden; background: var(--card); color: var(--muted); }
+#lh-search:focus-within { box-shadow: 0 0 0 1.5px rgba(var(--c-blue), .55); }
+#lh-search svg { width: 14px; height: 14px; flex: 0 0 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+#lh-search input { flex: 1; min-width: 0; height: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; outline: none; box-shadow: none;
+  background: transparent; color: var(--text); font-size: .78rem; -webkit-appearance: none; appearance: none; }
+#lh-search input::placeholder { color: var(--muted); opacity: .8; }
+#lh-search input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; margin-left: 6px; cursor: pointer; opacity: .6;
+  background: no-repeat center/12px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a8' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E"); }
+#lh-search input::-webkit-search-cancel-button:hover { opacity: 1; }
+@media (max-width: 639px) {
+  /* one wrapping row: CPU · RAM · Backup pill · date (right), then the search on its own line */
+  #widgets-wrap { flex-wrap: wrap; justify-content: flex-start; gap: 8px 12px; }
+  #widgets-wrap > .widget-container:first-child,
+  #widgets-wrap > .widget-container:first-child > div:first-child,
+  #information-widgets-right { display: contents; }
+  #widgets-wrap > .widget-container:first-child > div:last-child { display: none; } /* hide system-widget label */
+  .information-widget-resource > svg { display: none; }
+  .information-widget-resource > div { margin-left: 0 !important; min-width: 0 !important; }
+  .information-widget-resource .resource-value, .information-widget-resource .pr-1 { font-size: .66rem; }
+  .lh-bk-l, .lh-bk-s { display: none; } /* pill shows just the dot + date on phones */
+  .lh-backup { height: 22px; padding: 0 8px; font-size: .66rem; }
+  #information-widgets .information-widget-datetime { margin-left: auto; }
+  #information-widgets .information-widget-datetime .tabular-nums { font-size: .66rem !important; }
+  #lh-search { order: 5; flex: 1 0 100%; width: 100%; }
+}
+
+/* CPU / RAM bars: thin pastel pills */
+.resource-usage {
+  height: 6px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+.resource-usage > div { height: 6px !important; border-radius: 999px !important; background: rgb(var(--c-green)) !important; }
+.information-widget-resource:nth-of-type(2) .resource-usage > div { background: rgb(var(--c-purple)) !important; }
+
+/* ---- Groups: every section full width, services as a card grid ------ */
+#services { gap: 0; margin-top: 0.5rem !important; }
+#services > .services-group {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  padding: 0.5rem 0.25rem 0.75rem !important;
+}
+.service-group-name, .bookmark-group-name {
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  color: var(--muted) !important;
+  letter-spacing: 0.01em;
+  padding-left: 0.4rem;
+}
+.services-list {
+  display: grid !important;
+  gap: 12px;
+  margin-top: 0.75rem !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* mobile: 2 columns */
+}
+@media (min-width: 900px)  { .services-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 1280px) { .services-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* on phones, cards that carry widget data span the full row so numbers stay readable */
+@media (max-width: 639px) { .services-list > .service:has(.service-block) { grid-column: span 2; } }
+
+/* equal-height cards */
+.services-list > .service { display: flex; min-width: 0; }
+
+/* ---- Service cards -------------------------------------------------- */
+.service-card {
+  flex: 1;
+  margin: 0 !important;
+  padding: 18px 18px 16px !important;
+  background: var(--card) !important;
+  border: 0 !important;
+  border-radius: var(--radius) !important;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: visible !important; /* let the icon glow breathe */
+  transition: background .2s ease, transform .2s ease;
+}
+.service-card:hover { background: var(--card-hover) !important; transform: translateY(-1px); }
+
+/* title row: name left, icon badge top-right */
+.service-title { flex-direction: row-reverse; align-items: flex-start; gap: 10px; }
+.service-title-text { border-radius: 0 !important; }
+.service-name { padding: 2px 0 0 !important; font-size: 1.05rem !important; font-weight: 400 !important; color: var(--text) !important; line-height: 1.3; }
+.service-description { margin-top: 2px; font-size: .78rem !important; font-weight: 300 !important; color: var(--muted) !important; }
+
+/* circular icon badge with coloured glow ring */
+.service-icon {
+  --glow: var(--c-blue);
+  width: 44px !important; height: 44px !important; min-width: 44px;
+  border-radius: 50%;
+  background: #1c1c1e;
+  box-shadow: 0 0 0 1.5px rgba(var(--glow), .55), 0 0 18px 3px rgba(var(--glow), .35);
+}
+.service-icon img, .service-icon svg { width: 22px !important; height: 22px !important; object-fit: contain; }
+
+/* per-section glow colours (section order in services.yaml) */
+#services > .services-group:nth-child(1) .service-icon { --glow: var(--c-blue); }   /* Network */
+#services > .services-group:nth-child(2) .service-icon { --glow: var(--c-green); }  /* Servers */
+#services > .services-group:nth-child(3) .service-icon { --glow: var(--c-amber); }  /* Home */
+#services > .services-group:nth-child(4) .service-icon { --glow: var(--c-pink); }   /* Apps */
+#services > .services-group:nth-child(5) .service-icon { --glow: var(--c-purple); } /* Media */
+#services > .services-group:nth-child(6) .service-icon { --glow: var(--c-orange); }
+
+/* status/ping tags: keep them, but move off the icon to the bottom-right */
+.service-tags { top: auto !important; bottom: 10px; right: 14px; margin: 0 !important; }
+
+/* ---- Widget stat blocks: rounded inner tiles, big light numbers ------ */
+.service-container { flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.service-block {
+  flex: 1 1 72px !important;
+  min-width: max-content; /* tile grows/wraps instead of breaking the number */
+  margin: 0 !important;
+  padding: 6px 8px !important;
+  background: var(--inner) !important;
+  border-radius: 16px !important;
+}
+.service-block-value {
+  font-size: .95rem !important; /* smaller than the card title (1.05rem) */
+  font-weight: 500 !important;
+  line-height: 1.15;
+  color: var(--text) !important;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.service-block-label {
+  margin-top: 2px;
+  font-size: .62rem !important;
+  font-weight: 500 !important;
+  letter-spacing: .06em;
+  color: var(--muted) !important;
+}
+/* any other progress bars inside cards (e.g. Jellyfin now playing): thin pastel pills */
+.service-card .rounded-full { border-radius: 999px !important; }
+
+/* ---- Bookmarks (Resources) as small pill cards ---------------------- */
+#bookmarks .bookmark > a, #bookmarks .bookmark > div > a, #bookmarks a.block, #bookmarks button {
+  background: var(--card) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+.bookmark-icon {
+  border-radius: 999px !important;
+  background: #1c1c1e !important;
+  box-shadow: 0 0 0 1.5px rgba(var(--c-pink), .5), 0 0 12px 2px rgba(var(--c-pink), .3);
+}
+.bookmark-text { border-radius: 999px !important; }
+
+/* ---- Footer --------------------------------------------------------- */
+#footer, #version { color: var(--muted) !important; opacity: .7; }
+
+/* ---- Small screens: tighter page margins ---------------------------- */
+@media (max-width: 639px) {
+  #services { margin-left: 10px !important; margin-right: 10px !important; }
+  .service-card { padding: 16px !important; }
+  .service-block-value { font-size: .9rem !important; }
+}
+
+/* =====================================================================
+   HA-style progress bars inside service cards (added 2026-10-23)
+   Thin 6px pill: grey track #3a3a3c + solid pastel fill, text ABOVE.
+   Targets Homepage v2.6 now-playing markup (jellyfin/emby/plex share it):
+     .flex.flex-col.pb-1 > div.relative.rounded-md.mt-1   = info rows
+     ... > div.absolute.z-0 (inline width:%)               = progress fill
+   Top CPU/RAM/disk resource bars are intentionally NOT touched here.
+   ===================================================================== */
+/* pastel fill colour per section (matches the icon glow) */
+#services > .services-group:nth-child(1) { --bar: #7aa7ff; } /* Network: blue */
+#services > .services-group:nth-child(2) { --bar: #a8e6b8; } /* Servers: green */
+#services > .services-group:nth-child(3) { --bar: #f5c26b; } /* Home: amber */
+#services > .services-group:nth-child(4) { --bar: #f28bb8; } /* Apps: pink */
+#services > .services-group:nth-child(5) { --bar: #9b7bf7; } /* Media: purple */
+.service-card { --track: #3a3a3c; }
+
+/* now-playing wrapper: a bit of air below the stat tiles */
+.service-card .flex.flex-col.pb-1 { margin: 10px 2px 0 !important; padding-bottom: 0 !important; gap: 2px; }
+
+/* every info row: no dark block, small soft text */
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md {
+  background: transparent !important;
+  height: auto !important;
+  min-height: 1.1rem;
+  margin-top: 0 !important;
+  padding: 0 !important;
+  color: var(--muted) !important;
+  font-size: .75rem;
+  line-height: 1.1rem;
+}
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md .ml-2 { margin-left: 0 !important; }
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md .mr-2 { margin-right: 0 !important; }
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md > span.absolute { left: 0 !important; margin-top: 0 !important; }
+
+/* rows that contain a progress fill: text on top, thin pill bar underneath */
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md:has(> div.absolute.z-0) {
+  padding-bottom: 14px !important; /* room for the bar */
+  margin-bottom: 4px !important;
+}
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md:has(> div.absolute.z-0)::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 2px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--track);
+  z-index: 0;
+}
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md > div.absolute.z-0 {
+  top: auto !important;
+  bottom: 2px;
+  left: 0;
+  height: 6px !important;
+  min-width: 6px;
+  border-radius: 999px !important;
+  background: var(--bar, #9b7bf7) !important;
+  z-index: 1 !important;
+  transition: width 1s ease;
+}
+/* pause / play control: small and subtle */
+.service-card .flex.flex-col.pb-1 svg.cursor-pointer {
+  width: 13px !important; height: 13px !important;
+  opacity: .55 !important; margin-left: 0;
+}
+.service-card .flex.flex-col.pb-1 svg.cursor-pointer:hover { opacity: 1 !important; }
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md > div.ml-1 { margin-left: 0 !important; }
+/* elapsed / total time: small, tabular, soft grey */
+.service-card .flex.flex-col.pb-1 > div.relative.rounded-md > div.justify-end { font-variant-numeric: tabular-nums; color: var(--muted); margin-right: 0 !important; }
+
+/* generic: any other thin usage bar Homepage renders inside a card */
+.service-card .rounded-full.h-1, .service-card .rounded-full.h-2 {
+  height: 6px !important; border-radius: 999px !important; background: var(--track) !important;
+}
+.service-card .rounded-full.h-1 > div, .service-card .rounded-full.h-2 > div {
+  height: 6px !important; border-radius: 999px !important; background: var(--bar, #9b7bf7) !important;
+}
+
+/* simple-icons (mask) sizing */
+.service-icon > div, .service-icon div[style*="mask"] { width: 22px !important; height: 22px !important; max-width: 22px !important; max-height: 22px !important; mask-size: contain !important; -webkit-mask-size: contain !important; }
+
+/* Speedtest card: full-width bars like Jellyfin now-playing */
+.lh-hide { display: none !important; }
+.lh-sp { width: 100%; margin: 10px 2px 0; display: flex; flex-direction: column; gap: 8px; }
+.lh-sp-txt { display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted, #a1a1a8); line-height: 1.1rem; }
+.lh-sp-txt span:last-child { color: #e5e5ea; font-size: .85rem; font-weight: 500; line-height: 1.1rem; font-variant-numeric: tabular-nums; }
+.lh-sp-bar { width: 100%; height: 6px; border-radius: 999px; background: var(--track, #3a3a3c); overflow: hidden; margin-top: 3px; }
+.lh-sp-bar > i { display: block; height: 100%; border-radius: 999px; background: var(--bar, #7aa7ff); transition: width .6s ease; }
+.lh-sp-bar.ul > i { background: #9b7bf7; }
+.lh-sp-foot { font-size: .62rem; color: var(--muted, #a1a1a8); opacity: .7; text-align: right; margin-top: 2px; }
+
+/* Speedtest: hide original tiles from first paint (incl. loading skeleton) */
+[data-name="Speedtest"] div:has(> .service-block) { display: none !important; }
+/* NAS: hide original tiles (same pattern as Speedtest) */
+[data-name="NAS"] div:has(> .service-block) { display: none !important; }
+/* Monitoring + Proxmox: hide original tiles (bar pattern) */
+[data-name="Monitoring"] div:has(> .service-block), [data-name="Proxmox"] div:has(> .service-block) { display: none !important; }
+
+/* 2026-10-24: HA / TeslaMate / qBittorrent bar cards, top-bar backup indicator, date on the far right */
+[data-name="Home Assistant"] div:has(> .service-block),
+[data-name="TeslaMate"] div:has(> .service-block),
+[data-name="qBittorrent"] div:has(> .service-block) { display: none !important; }
+.lh-sp-bar.sol > i { background: #a8e6b8; }
